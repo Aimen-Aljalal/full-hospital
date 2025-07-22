@@ -4,9 +4,19 @@ const router = express.Router();
 
 const patientController = require("../controller/Patient");
 
+const { body } = require("express-validator");
+
+
 const isAuth = require("../middleware/auth");
 
-router.post("/addPatient", patientController.addPatient);
+router.post("/addPatient",   [
+    body("name").notEmpty(),
+    body("contact").isEmail(),
+    body("password").isLength({ min: 3 }),
+    body("gender").notEmpty(),
+    body("medicalHistory").notEmpty(),
+    body("age").notEmpty(),
+  ], patientController.addPatient);
 
 router.get("/allPatients", isAuth, patientController.getAllPatients);
 

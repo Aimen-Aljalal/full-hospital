@@ -1,9 +1,16 @@
 const Patients = require("../models/patients");
-const User = require("../models/users");
 const Doctors = require("../models/doctor");
 const bcrypt = require("bcryptjs");
+const { validationResult } = require("express-validator");
 
 exports.addPatient = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      message: "patient registration not valid",
+      errors: errors.array(),
+    });
+  }
   const { name, age, gender, contact, medicalHistory, doctorId, password } =
     req.body;
 
@@ -13,9 +20,18 @@ exports.addPatient = async (req, res, next) => {
       return res.status(404).json({ message: "No doctor found" });
     }
 
-    const isExist = await Patients.findOne({ contact });
-    if (isExist) {
-      return res.status(409).json({ message: "Patient already exists" });
+    const isDoctorExist = await Doctors.findOne({ contact });
+    if (isDoctorExist) {
+      return res
+        .status(409)
+        .json({ message: "This email is already used by a doctor" });
+    }
+
+    const isPatientExist = await Patients.findOne({ contact });
+    if (isPatientExist) {
+      return res
+        .status(409)
+        .json({ message: "This email already exists as patient" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -29,7 +45,7 @@ exports.addPatient = async (req, res, next) => {
       password: hashedPassword,
       doctorId: doctor._id,
       doctorName: doctor.name,
-       role: "patient",
+      role: "patient",
     });
 
     await patient.save();
@@ -116,13 +132,16 @@ exports.editPatientProfile = async (req, res) => {
 
 exports.getPatientDetails = async (req, res) => {
   try {
-    const patient = await Patients.findById(req.userId).populate("doctorId", "name specialization contact");
+    const patient = await Patients.findById(req.userId).populate(
+      "doctorId",
+      "name specialization contact"
+    );
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
 
     res.status(200).json({
-       _id: patient._id,
+      _id: patient._id,
       name: patient.name,
       medicalHistory: patient.medicalHistory,
       doctor: {
@@ -136,7 +155,6 @@ exports.getPatientDetails = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-
 
 exports.deletePaitent = async (req, res, next) => {
   if (!req.role || req.role === "patient") {

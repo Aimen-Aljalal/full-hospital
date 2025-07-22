@@ -5,15 +5,15 @@ const router = express.Router();
 
 const doctorController = require("../controller/doctor");
 
-const isAuth = require("../middleware/auth");
+// const isAuth = require("../middleware/auth");
 
-router.get("/allDoc", doctorController.getAllDoctors);
+// router.get("/allDoc", doctorController.getAllDoctors);
 
-router.get("/doctor/:docId", isAuth, doctorController.getOneDoc);
+// router.get("/doctor/:docId", isAuth, doctorController.getOneDoc);
 
-router.patch("/editDoctor/:docId", isAuth, doctorController.editDoctor);
+// router.patch("/editDoctor/:docId", isAuth, doctorController.editDoctor);
 
-router.delete("/deleteDoctor/:docId", isAuth, doctorController.deleteDoctor);
+// router.delete("/deleteDoctor/:docId", isAuth, doctorController.deleteDoctor);
 router.post(
   "/addDoctor",
   [
