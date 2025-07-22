@@ -7,7 +7,7 @@ const doctorController = require("../controller/doctor");
 
 // const isAuth = require("../middleware/auth");
 
-// router.get("/allDoc", doctorController.getAllDoctors);
+router.get("/allDoc", doctorController.getAllDoctors);
 
 // router.get("/doctor/:docId", isAuth, doctorController.getOneDoc);
 

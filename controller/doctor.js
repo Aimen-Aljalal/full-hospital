@@ -3,20 +3,20 @@ const Patients = require("../models/patients");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 
-// exports.getAllDoctors = async (req, res, next) => {
-//   try {
-//     const allDoc = await Doctors.find().select("name specialization contact");
+exports.getAllDoctors = async (req, res, next) => {
+  try {
+    const allDoc = await Doctors.find().select("name specialization contact");
 
-//     if (allDoc.length === 0) {
-//       return res.status(404).json({ message: "No doctors found" });
-//     }
+    if (allDoc.length === 0) {
+      return res.status(404).json({ message: "No doctors found" });
+    }
 
-//     res.status(200).json({ message: "Found all doctors", allDoc });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+    res.status(200).json({ message: "Found all doctors", allDoc });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 // exports.getOneDoc = async (req, res, next) => {
 //   const DocId = req.params.docId;
